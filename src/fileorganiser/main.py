@@ -19,6 +19,8 @@ def get_directories():
     dir_folders = [f for f in os.listdir(dir) if not os.path.isfile(os.path.join(dir, f))]
     return dir, dir_files, dir_folders
 
+
+#parses the config file to get the types of files and their matching file extensions. Returns a dictionary with this info.
 def load_configs():
     config = ConfigParser()
     config.read("config.ini")
@@ -28,9 +30,33 @@ def load_configs():
     return filetypes
 
 
+def get_file_extension(file):
+    return "." + file.split(".")[-1]
+
+#Sorts all the files into a dictionary where they are paired with their repsective file type. All files of the same type will be stored in a list.
+def get_file_info(dir_files, folders_config):
+    sorted_files = {}
+    for file in dir_files:
+        file_extension = get_file_extension(file)
+        for filetype, extensions in folders_config.items():
+            if file_extension in extensions:
+                if filetype in sorted_files:
+                    print(file)
+                    sorted_files[filetype] += [file]
+                else:
+                    sorted_files[filetype] = [file]
+
+    return sorted_files
+
 def main():
-    folders = load_configs()
+    folders_config = load_configs()
     dir, dir_files, dir_folders = get_directories()
+    print(dir)
+    print(dir_files)
+    print(dir_folders)
+    print(folders_config)
+    print(get_file_info(dir_files, folders_config))
+    #print(get_file_extension("text.txt"))
 
 
 
