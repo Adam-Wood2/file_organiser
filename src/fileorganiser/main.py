@@ -1,6 +1,37 @@
 import os
 from configparser import ConfigParser
 
+class File:
+    def __init__(self, file_name,location):
+        self.file_name = file_name
+        self.location = location
+        self.full_path = os.path.join(self.location, self.file_name)
+        self.file_extension = self.__get_file_extension()
+        self.file_type = self.__get_file_type()
+        self.size = self.get_file_size()
+
+    
+    def format_size(self):
+        units = ["B","KB","MB","GB"]
+        unit_index = 0
+
+        size = self.size
+        while size >= 1024 and unit_index < len(units) -1:
+            size /= 1024
+            unit_index +=1
+        return f"{size:.2f} {units[unit_index]}"
+
+    def __get_file_extension(self):
+        return "." + self.file_name.split(".")[-1]
+
+    def __get_file_type(self):
+        return extension_lookup[self.file_extension]
+
+    def get_file_size(self):
+        stats = os.stat(self.full_path)
+        size = stats.st_size
+        return size
+
 #C:\Users\Adam\OneDrive\Documents\Programs\Test Folder
 #Gets the directory from the user and extracts all files and folders from it
 def get_directories():
@@ -29,10 +60,16 @@ def load_configs():
         filetypes[filetype] = [extension.strip() for extension in extensions.split(",")]
     return filetypes
 
+def generate_lookup(folders_config):
+    extension_lookup = {}
+    for file_type, extensions in folders_config.items():
+        for extension in extensions:
+            extension_lookup[extension] = file_type
+    return extension_lookup
 
-def get_file_extension(file):
-    return "." + file.split(".")[-1]
 
+
+'''
 #Sorts all the files into a dictionary where they are paired with their repsective file type. All files of the same type will be stored in a list.
 def get_file_info(dir_files, folders_config):
     sorted_files = {}
@@ -47,18 +84,18 @@ def get_file_info(dir_files, folders_config):
                     sorted_files[filetype] = [file]
 
     return sorted_files
-
+'''
 def main():
-    folders_config = load_configs()
     dir, dir_files, dir_folders = get_directories()
-    print(dir)
-    print(dir_files)
-    print(dir_folders)
-    print(folders_config)
-    print(get_file_info(dir_files, folders_config))
-    #print(get_file_extension("text.txt"))
+    #print(dir)
+    #print(dir_files)
+    #print(dir_folders)
+    #print(folders_config)
+    file = File("test.txt", dir)
+    print(file.format_size())
 
-
+folders_config = load_configs()
+extension_lookup = generate_lookup(folders_config)
 
 if __name__ == "__main__":
     main()
