@@ -69,22 +69,6 @@ def generate_lookup(folders_config):
 
 
 
-'''
-#Sorts all the files into a dictionary where they are paired with their repsective file type. All files of the same type will be stored in a list.
-def get_file_info(dir_files, folders_config):
-    sorted_files = {}
-    for file in dir_files:
-        file_extension = get_file_extension(file)
-        for filetype, extensions in folders_config.items():
-            if file_extension in extensions:
-                if filetype in sorted_files:
-                    print(file)
-                    sorted_files[filetype] += [file]
-                else:
-                    sorted_files[filetype] = [file]
-
-    return sorted_files
-'''
 def main():
     dir, dir_files, dir_folders = get_directories()
     #print(dir)
