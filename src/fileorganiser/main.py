@@ -111,7 +111,9 @@ def scan_dir(dir, dir_files, dir_folders):
 
         if not file.is_ignored and file_destination not in needed_folders and file_destination not in dir_folders:
             needed_folders.append(file_destination)
-        files.append(file)
+
+        if not file.is_ignored:
+            files.append(file)
         current_file_num += 1
         draw_progress_bar(current_file_num,total_files)
 
