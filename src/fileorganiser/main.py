@@ -124,6 +124,7 @@ def scan_dir(dir, dir_files, dir_folders):
     return files, needed_folders
 
 def dry_run(files, needed_folders):
+    print("Files to move:\n")
     for file in files:
         print(file.file_name)
         print(f"    {file.full_path}")
