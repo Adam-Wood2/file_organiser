@@ -85,6 +85,7 @@ def load_configs():
         filetypes[filetype] = [extension.strip() for extension in extensions.split(",")]
     return filetypes
 
+
 def generate_lookup(folders_config):
     extension_lookup = {}
     ignore_lookup = []
@@ -126,11 +127,9 @@ def main():
     #print(dir_folders)
     #print(folders_config)
     #file = File("test.png", dir)
-
+    files, needed_folders = scan_dir(dir, dir_files, dir_folders)
     
 
 folders_config = load_configs()
 extension_lookup, ignore_lookup = generate_lookup(folders_config)
-
-if __name__ == "__main__":
-    main()
+main()
