@@ -57,6 +57,8 @@ def draw_progress_bar(val1, val2):
         print(progress_bar, end="\r")
     else:
         print(progress_bar)
+
+
 #C:\Users\Adam\OneDrive\Documents\Programs\Test Folder
 #Gets the directory from the user and extracts all files and folders from it
 def get_directories():
@@ -82,7 +84,7 @@ def load_configs():
     config.read("config.ini")
     filetypes = {}
     for filetype, extensions in config["FILETYPES"].items():
-        filetypes[filetype] = [extension.strip() for extension in extensions.split(",")]
+        filetypes[filetype.capitalize()] = [extension.strip() for extension in extensions.split(",")]
     return filetypes
 
 
@@ -91,7 +93,7 @@ def generate_lookup(folders_config):
     ignore_lookup = []
     for file_type, extensions in folders_config.items():
         for extension in extensions:
-            if file_type != "ignore":
+            if file_type != "Ignore":
                 extension_lookup[extension] = file_type
             else:
                 ignore_lookup.append(extension)
@@ -105,6 +107,7 @@ def scan_dir(dir, dir_files, dir_folders):
     files = []
     total_files = len(dir_files)
     current_file_num = 0
+    print("Scanning directory...")
     for file_name in dir_files:
         file = File(file_name, dir)
 
@@ -117,17 +120,25 @@ def scan_dir(dir, dir_files, dir_folders):
             files.append(file)
         current_file_num += 1
         draw_progress_bar(current_file_num,total_files)
-
+    print("Scan complete")
     return files, needed_folders
+
+def dry_run(files, needed_folders):
+    for file in files:
+        print(file.file_name)
+        print(f"    {file.full_path}")
+        print(f"    └ {file.destination}")
+
+    print("Folders to be created:")
+    print(" "+"\n ".join(needed_folders))
+    print(f"\n{len(files)} files would be moved.")
+
 
 def main():
     dir, dir_files, dir_folders = get_directories()
-    #print(dir)
-    #print(dir_files)
-    #print(dir_folders)
-    #print(folders_config)
-    #file = File("test.png", dir)
+
     files, needed_folders = scan_dir(dir, dir_files, dir_folders)
+    dry_run(files,needed_folders)
     
 
 folders_config = load_configs()
