@@ -1,6 +1,7 @@
 import os
+import shutil
 from configparser import ConfigParser
-import json
+import history
 #C:\Users\Adam\OneDrive\Documents\Programs\Test Folder
 class File:
     def __init__(self, file_name, location):
@@ -12,6 +13,8 @@ class File:
         self.size = self.get_file_size()
         self.is_ignored = self.file_extension in ignore_lookup
         self.destination = self.get_destination()
+        if not self.is_ignored:
+            self.full_destination = os.path.join(self.location, self.destination)
     
     def format_size(self):
         units = ["B","KB","MB","GB"]
@@ -57,7 +60,6 @@ def draw_progress_bar(val1, val2):
         print(progress_bar, end="\r")
     else:
         print(progress_bar)
-
 
 #Gets the directory from the user and extracts all files and folders from it
 def get_directories():
@@ -138,6 +140,8 @@ def create_folders(needed_folders, dir):
     for folder in needed_folders:
         os.mkdir(os.path.join(dir, folder))
 
+def move_file(file):
+    shutil.move(file.full_path, file)
 
 def main():
     dir, dir_files, dir_folders = get_directories()

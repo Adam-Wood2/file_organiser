@@ -20,6 +20,7 @@ def save_operations(operations):
     history_file = "operation_history.json"
 
     operation_history = []
+    
     if os.path.isfile(history_file):
         with open(history_file, "r") as file:
             operation_history = json.load(file)
