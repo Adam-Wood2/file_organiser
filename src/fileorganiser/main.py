@@ -1,7 +1,7 @@
 import os
 from configparser import ConfigParser
 from time import sleep
-
+#C:\Users\Adam\OneDrive\Documents\Programs\Test Folder
 class File:
     def __init__(self, file_name, location):
         self.file_name = file_name
@@ -59,7 +59,6 @@ def draw_progress_bar(val1, val2):
         print(progress_bar)
 
 
-#C:\Users\Adam\OneDrive\Documents\Programs\Test Folder
 #Gets the directory from the user and extracts all files and folders from it
 def get_directories():
     while True:
