@@ -1,6 +1,6 @@
 #python
 configwriter.py
-
+operation_history.json
 #Virtual environment
 .venv/
 
