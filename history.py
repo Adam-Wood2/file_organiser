@@ -29,8 +29,3 @@ def save_operations(operations):
     with open(history_file, "w") as file:
         json.dump(operation_history,file,indent=4)
 
-
-operations = [generate_operation("1","2")]
-operations.append(generate_operation("3","4"))
-
-save_operations(operations)
