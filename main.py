@@ -1,6 +1,6 @@
 import os
 from configparser import ConfigParser
-from time import sleep
+import json
 #C:\Users\Adam\OneDrive\Documents\Programs\Test Folder
 class File:
     def __init__(self, file_name, location):
@@ -133,6 +133,7 @@ def dry_run(files, needed_folders):
     print(" "+"\n ".join(needed_folders))
     print(f"\n{len(files)} files would be moved.")
 
+
 def create_folders(needed_folders, dir):
     for folder in needed_folders:
         os.mkdir(os.path.join(dir, folder))
@@ -141,8 +142,8 @@ def create_folders(needed_folders, dir):
 def main():
     dir, dir_files, dir_folders = get_directories()
     test = ["Images", "Videos"]
-    create_folders(test, dir)
-    
+
+    files, needed_folders = scan_dir(dir, dir_files, dir_folders)
     dry_run(files,needed_folders)
     
 
