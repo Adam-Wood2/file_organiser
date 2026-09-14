@@ -9,7 +9,7 @@ def generate_operation(source, destination):
     }
     return operation
 
-def save_operations(operations):
+def save_operations(operations: list):
     id = datetime.now().strftime("%Y%m%d%H%M%S")
 
     json_operation = {
@@ -20,7 +20,7 @@ def save_operations(operations):
     history_file = "operation_history.json"
 
     operation_history = []
-    
+
     if os.path.isfile(history_file):
         with open(history_file, "r") as file:
             operation_history = json.load(file)

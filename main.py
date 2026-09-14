@@ -141,14 +141,30 @@ def create_folders(needed_folders, dir):
         os.mkdir(os.path.join(dir, folder))
 
 def move_file(file):
-    shutil.move(file.full_path, file)
+    shutil.move(file.full_path, file.full_destination)
+    operation = history.generate_operation(file.full_path, file.full_destination)
+    return operation
+
+def organise(files, needed_folders, dir):
+    create_folders(needed_folders,dir)
+    operations = []
+    for file in files:
+        operation = move_file(file)
+        print(file.file_name)
+        print(operation)
+        operations.append(operation)
+    history.save_operations(operations)
+
 
 def main():
+
     dir, dir_files, dir_folders = get_directories()
     test = ["Images", "Videos"]
-
+    
     files, needed_folders = scan_dir(dir, dir_files, dir_folders)
     dry_run(files,needed_folders)
+    input("")
+    organise(files,needed_folders,dir)
     
 
 folders_config = load_configs()
