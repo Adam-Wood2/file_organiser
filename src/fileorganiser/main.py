@@ -133,11 +133,16 @@ def dry_run(files, needed_folders):
     print(" "+"\n ".join(needed_folders))
     print(f"\n{len(files)} files would be moved.")
 
+def create_folders(needed_folders, dir):
+    for folder in needed_folders:
+        os.mkdir(os.path.join(dir, folder))
+
 
 def main():
     dir, dir_files, dir_folders = get_directories()
-
-    files, needed_folders = scan_dir(dir, dir_files, dir_folders)
+    test = ["Images", "Videos"]
+    create_folders(test, dir)
+    
     dry_run(files,needed_folders)
     
 
