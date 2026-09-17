@@ -139,6 +139,8 @@ def dry_run(files, needed_folders):
 
 
 def create_folders(needed_folders, dir):
+    if len(needed_folders) == 0:
+        raise Exception("No folders created")
     for folder in needed_folders:
         os.mkdir(os.path.join(dir, folder))
 
@@ -148,14 +150,34 @@ def move_file(file):
     return operation
 
 def organise(files, needed_folders, dir):
-    create_folders(needed_folders,dir)
+    logger.info("beginning organisation")
+
+    logger.info("Creating missing folders")
+    try:
+        create_folders(needed_folders,dir)
+    except Exception as e:
+        logger.warning(f"Issue creating missing folders. Issue: {e}")
+    else:
+        logger.info("Missing folders created")
     operations = []
+
     for file in files:
-        operation = move_file(file)
-        print(file.file_name)
-        print(operation)
-        operations.append(operation)
-    history.save_operations(operations)
+        try:
+            operation = move_file(file)
+        except Exception as e:
+            logger.warning(f"File {file.full_path}")
+        else:
+            operations.append(operation)
+            logger.info("finished organisng")
+
+    logger.info("saving operation to json file")
+
+    try:
+        history.save_operations(operations)
+    except Exception as e:
+        logger.info(f"error encountered saving operations to json file. Error: {e}")
+    else:
+        logger.info("operation saved to json file")
 
 
 def main():
