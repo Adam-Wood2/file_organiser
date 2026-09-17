@@ -2,6 +2,8 @@ import os
 import shutil
 from configparser import ConfigParser
 import history
+import logging
+
 #C:\Users\Adam\OneDrive\Documents\Programs\Test Folder
 class File:
     def __init__(self, file_name, location):
@@ -157,7 +159,7 @@ def organise(files, needed_folders, dir):
 
 
 def main():
-
+    logging.basicConfig(filename="file_organsier.log")
     dir, dir_files, dir_folders = get_directories()
     test = ["Images", "Videos"]
     
@@ -169,4 +171,5 @@ def main():
 
 folders_config = load_configs()
 extension_lookup, ignore_lookup = generate_lookup(folders_config)
+logger = logging.getLogger("FILE_ORGANISER")
 main()
