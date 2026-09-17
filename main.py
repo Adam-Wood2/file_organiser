@@ -159,6 +159,7 @@ def organise(files, needed_folders, dir):
         logger.warning(f"Issue creating missing folders. Issue: {e}")
     else:
         logger.info("Missing folders created")
+
     operations = []
 
     for file in files:
@@ -181,7 +182,11 @@ def organise(files, needed_folders, dir):
 
 
 def main():
-    logging.basicConfig(filename="file_organsier.log")
+    logging.basicConfig(filename="file_organsier.log", level=logging.INFO)
+    formatter = logging.Formatter("%(asctime) %(levelname) %(message)", "%Y-%m-%d %H-%M-%S")
+    logger.setFormatter(formatter)
+    logger.info("Test")
+    '''
     dir, dir_files, dir_folders = get_directories()
     test = ["Images", "Videos"]
     
@@ -189,7 +194,7 @@ def main():
     dry_run(files,needed_folders)
     input("")
     organise(files,needed_folders,dir)
-    
+    '''
 
 folders_config = load_configs()
 extension_lookup, ignore_lookup = generate_lookup(folders_config)
