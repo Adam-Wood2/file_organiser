@@ -3,6 +3,8 @@ operation_history.json
 file_organiser.log
 #Virtual environment
 .venv/
-
+#environment
+__pycache__/
+.mypy_cache/
 #Testing
 
