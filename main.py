@@ -209,7 +209,7 @@ def main():
     #organise(files,needed_folders,dir)
     
 logger = logging.getLogger("FILE_ORGANISER")
-logging.basicConfig(filename="file_organsier.log", 
+logging.basicConfig(filename="file_organiser.log", 
                         level=logging.INFO, 
                         format="[%(levelname)s] %(asctime)s %(message)s", 
                         datefmt="%Y-%m-%d %H:%M:%S")
