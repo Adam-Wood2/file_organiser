@@ -1,6 +1,7 @@
 #python
 configwriter.py
 operation_history.json
+file_organiser.log
 #Virtual environment
 .venv/
 
