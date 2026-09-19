@@ -1,16 +1,17 @@
-INFO:FILE_ORGANISER:Test
-INFO:FILE_ORGANISER:Test
-2026-09-19 13:06:17,857 INFO Test
-2026-09-19 13:06:48,573-INFO-Test
-2026-09-19 13:06:56,163-INFO- Test
-INFO 2026-09-19 13:07:14,502 Test
-INFO - 2026-09-19 13:07:23,191 Test
-INFO-2026-09-19 13:07:29,480 Test
-[INFO] 2026-09-19 13:07:41,211 Test
-[INFO] 2026-09-19 13-07-55 Test
-[INFO] 2026-09-09/19/26 13-08-10 Test
-[INFO] 2026-09-19 13-08-25 Test
-[INFO] 2026-09-19 13:08:40 Test
-[INFO] 2026-09-19 13:08:54 Message:Test
-[INFO] 2026-09-19 13:08:59 Message: Test
-[INFO] 2026-09-19 13:09:06 Test
+[INFO] 2026-09-19 15:19:40 Loading configurations
+[INFO] 2026-09-19 15:19:40 Configuration file not found
+[WARNING] 2026-09-19 15:19:40 No configuration file found. Generating new configuration file
+[INFO] 2026-09-19 15:19:40 Default configuration file generated.
+[INFO] 2026-09-19 15:19:40 Loading configurations
+[INFO] 2026-09-19 15:19:40 configuration file found
+[INFO] 2026-09-19 15:19:40 Test
+[INFO] 2026-09-19 15:19:42 Beginning directory scan
+[INFO] 2026-09-19 15:19:42 File test - Copy.jpeg found
+[INFO] 2026-09-19 15:19:42 Identified folder Images to be created
+[INFO] 2026-09-19 15:19:42 File test - Copy.txt found
+[INFO] 2026-09-19 15:19:42 Identified folder Documents to be created
+[INFO] 2026-09-19 15:19:42 File test.pdf found
+[INFO] 2026-09-19 15:19:42 File test.png found
+[INFO] 2026-09-19 15:19:42 File test.txt found
+[INFO] 2026-09-19 15:19:42 File video.mp4 found
+[INFO] 2026-09-19 15:19:42 Identified folder Video to be created

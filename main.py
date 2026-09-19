@@ -3,8 +3,7 @@ import shutil
 from configparser import ConfigParser
 import history
 import logging
-
-#C:\Users\Adam\OneDrive\Documents\Programs\Test Folder
+from configwriter import generateDefaultConfig
 class File:
     def __init__(self, file_name, location):
         self.file_name = file_name
@@ -83,8 +82,16 @@ def get_directories():
 
 #parses the config file to get the types of files and their matching file extensions. Returns a dictionary with this info.
 def load_configs():
+    logger.info("Loading configurations")
     config = ConfigParser()
-    config.read("config.ini")
+
+    if os.path.exists(os.path.join(os.getcwd(), "config.ini")):
+        logger.info("configuration file found")
+        config.read("config.ini")
+    else:
+        logger.info("Configuration file not found")
+        raise Exception("No configuration file exists")
+    
     filetypes = {}
     for filetype, extensions in config["FILETYPES"].items():
         filetypes[filetype.capitalize()] = [extension.strip() for extension in extensions.split(",")]
@@ -110,14 +117,18 @@ def scan_dir(dir, dir_files, dir_folders):
     files = []
     total_files = len(dir_files)
     current_file_num = 0
+    logger.info("Beginning directory scan")
     print("Scanning directory...")
     for file_name in dir_files:
         file = File(file_name, dir)
+        logger.info(f"File {file_name} found")
 
         file_destination = file.get_destination()
 
+        #checks if the filetype will be sorted, whether the folder has already been identified, and whether or not it already exists
         if not file.is_ignored and file_destination not in needed_folders and file_destination not in dir_folders:
             needed_folders.append(file_destination)
+            logger.info(f"Identified folder {file_destination} to be created")
 
         if not file.is_ignored:
             files.append(file)
@@ -142,10 +153,14 @@ def create_folders(needed_folders, dir):
     if len(needed_folders) == 0:
         raise Exception("No folders created")
     for folder in needed_folders:
+        logger.info(f"Creating folder {folder}")
         os.mkdir(os.path.join(dir, folder))
+        logger.info(f"Created folder {folder}")
 
 def move_file(file):
+    logger.info(f"Moving file {file.file_name}")
     shutil.move(file.full_path, file.full_destination)
+    logger.info(f"Completed move {file.full_path} to {file.full_destination}")
     operation = history.generate_operation(file.full_path, file.full_destination)
     return operation
 
@@ -166,7 +181,7 @@ def organise(files, needed_folders, dir):
         try:
             operation = move_file(file)
         except Exception as e:
-            logger.warning(f"File {file.full_path}")
+            logger.warning(f"File {file.full_path} not moved. Error: {e}")
         else:
             operations.append(operation)
             logger.info("finished organisng")
@@ -182,21 +197,49 @@ def organise(files, needed_folders, dir):
 
 
 def main():
-    logging.basicConfig(filename="file_organsier.log", level=logging.INFO, format="[%(levelname)s] %(asctime)s %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
-    formatter = logging.Formatter("%(asctime) %(levelname) %(message)", "%Y-%m-%d %H-%M-%S")
-    #logger.setFormatter(formatter)
+    
     logger.info("Test")
-    '''
+    
     dir, dir_files, dir_folders = get_directories()
     test = ["Images", "Videos"]
     
     files, needed_folders = scan_dir(dir, dir_files, dir_folders)
     dry_run(files,needed_folders)
-    input("")
-    organise(files,needed_folders,dir)
-    '''
-
-folders_config = load_configs()
-extension_lookup, ignore_lookup = generate_lookup(folders_config)
+    #input("")
+    #organise(files,needed_folders,dir)
+    
 logger = logging.getLogger("FILE_ORGANISER")
-main()
+logging.basicConfig(filename="file_organsier.log", 
+                        level=logging.INFO, 
+                        format="[%(levelname)s] %(asctime)s %(message)s", 
+                        datefmt="%Y-%m-%d %H:%M:%S")
+try:
+    folders_config = load_configs()
+except Exception as e:
+    if "No configuration file exists" in str(e):
+        logger.warning("No configuration file found. Generating new configuration file")
+        generateDefaultConfig()
+        logger.info("Default configuration file generated.")
+        folders_config = load_configs()
+
+extension_lookup, ignore_lookup = generate_lookup(folders_config)
+
+if __name__ == "__main__":
+    logger = logging.getLogger("FILE_ORGANISER")
+    logging.basicConfig(filename="file_organsier.log", 
+                            level=logging.INFO, 
+                            format="[%(levelname)s] %(asctime)s %(message)s", 
+                            datefmt="%Y-%m-%d %H:%M:%S")
+    try:
+        folders_config = load_configs()
+    except Exception as e:
+        if "No configuration file exists" in str(e):
+            logger.warning("No configuration file found. Generating new configuration file")
+            generateDefaultConfig()
+            logger.info("Default configuration file generated.")
+            folders_config = load_configs()
+
+    extension_lookup, ignore_lookup = generate_lookup(folders_config)
+    main()
+
+#C:\Users\Adam\OneDrive\Documents\Programs\Test Folder
