@@ -214,7 +214,7 @@ if __name__ == "__main__":
 
 #Creates logger and configures it, example of logger format: "[INFO] 2026-06-20 12:30:35"
 logger = logging.getLogger("FILE_ORGANISER")
-logging.basicConfig(filename="file_organsier.log", 
+logging.basicConfig(filename="file_organiser.log", 
                         level=logging.INFO, 
                         format="[%(levelname)s] %(asctime)s %(message)s", 
                         datefmt="%Y-%m-%d %H:%M:%S")
