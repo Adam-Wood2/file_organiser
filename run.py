@@ -2,7 +2,7 @@ import main as m
 
 VERSION = "0.1"
 
-
+#Gets the directory from a string. Ensures that the directory is encapsulated in ""
 def get_location(command: str):
 
     start_index = command.index('"')
@@ -28,18 +28,26 @@ def parse_command(command: str):
         case "exit":
             print("Exiting File Organiser")
             exit()
+
         case "target":
+            #attempts to extract a directory from the given command.
             try:
                 location = get_location(command)
             except ValueError as e:
                 return "error", e, "Directory path must be enclosed in quotation marks (\"C:\\path\")"
 
+            #Checks if any information has been given after the file path parameter
+            if len(command.split('"')) != 2:
+                return "error", SyntaxError("Incorrect arguments"), "Target command only takes argument [path]"
+
+            #Attempts to search for every file and folder in the previously given directory
             try:
                 output = target(location)
             except AttributeError as e:
                 return "error", e, "The directory path given does not exist"
             except ValueError as e:
                 return "error", e, "The given directory is empty"
+
         case "dryrun":
             dryrun()
         case "organise":
@@ -56,10 +64,12 @@ def parse_command(command: str):
 def run():
     exit = False
     print(f"File Organiser - Version {VERSION}")
+    m.logger.info(f"Begging File Organiser - Version {VERSION}")
+    target = None
     while not exit:
         command = input(">>")
         output = parse_command(command)
-        print(output)
+        #print(output)
         input("")
 
 
