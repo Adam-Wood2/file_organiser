@@ -69,7 +69,7 @@ def run():
     while not exit:
         command = input(">>")
         output = parse_command(command)
-        #print(output)
+        print(output)
         input("")
 
 
