@@ -13,10 +13,10 @@ class File:
         self.file_type = self.__get_file_type()
         self.size = self.get_file_size()
         self.is_ignored = self.file_extension in ignore_lookup
-        self.destination = self.get_destination()
         if not self.is_ignored:
-            self.full_destination = os.path.join(self.location, self.destination)
-    
+            self.full_destination = os.path.join(self.location, self.__get_file_type())
+
+    #Returns a string with the size of the file in the largest units whilst keeping the digits above 1
     def format_size(self):
         units = ["B","KB","MB","GB"]
         unit_index = 0
@@ -27,31 +27,28 @@ class File:
             unit_index +=1
         return f"{size:.2f} {units[unit_index]}"
 
+    #Rebuilds the file extension after it has been split
     def __get_file_extension(self):
         return "." + self.file_name.split(".")[-1]
 
+    #Checks if the file type is to be ignored. If not, looks up the extension in the lookup dictionary to find the related file type.
+    #If the extension is not found in the lookup dictionary, it is set to "Other"
     def __get_file_type(self):
         if self.file_extension in ignore_lookup:
-            return self.file_extension
+            return None
         elif self.file_extension in extension_lookup:
             return extension_lookup[self.file_extension]
         else:
             return "Other"
-        
+
+    #Returns the file size in bytes    
     def get_file_size(self):
         stats = os.stat(self.full_path)
-        size = stats.st_size
-        return size
-
-    def get_destination(self):
-        if self.file_extension in ignore_lookup:
-            return "N/A"
-        elif self.file_extension in extension_lookup:
-            return extension_lookup[self.file_extension]
-        else:
-            return "Other"
+        size_in_bytes = stats.st_size
+        return size_in_bytes
 
 
+#Draws the progress bar at a specific percentage
 def draw_progress_bar(val1, val2):
 
     progress = int(((val1 / val2)*100) // 2)
@@ -97,7 +94,7 @@ def load_configs():
         filetypes[filetype.capitalize()] = [extension.strip() for extension in extensions.split(",")]
     return filetypes
 
-
+#Generates a lookup dictionary with the format of {extension} : {file type}. This makes future searches much quicker/
 def generate_lookup(folders_config):
     extension_lookup = {}
     ignore_lookup = []
@@ -117,6 +114,7 @@ def scan_dir(dir, dir_files, dir_folders):
     files = []
     total_files = len(dir_files)
     current_file_num = 0
+
     logger.info("Beginning directory scan")
     print("Scanning directory...")
     for file_name in dir_files:
@@ -137,6 +135,7 @@ def scan_dir(dir, dir_files, dir_folders):
     print("Scan complete")
     return files, needed_folders
 
+#Prints to the command line where each file is going to be moved and from where, and what folders need to be created
 def dry_run(files, needed_folders):
     print("Files to move:\n")
     for file in files:
@@ -148,7 +147,7 @@ def dry_run(files, needed_folders):
     print(" "+"\n ".join(needed_folders))
     print(f"\n{len(files)} files would be moved.")
 
-
+#Checks if any folders need to be created, and if so creates them
 def create_folders(needed_folders, dir):
     if len(needed_folders) == 0:
         raise Exception("No folders created")
@@ -157,6 +156,7 @@ def create_folders(needed_folders, dir):
         os.mkdir(os.path.join(dir, folder))
         logger.info(f"Created folder {folder}")
 
+#Moves an individual file to its destination, and then generates an operation history.
 def move_file(file):
     logger.info(f"Moving file {file.file_name}")
     shutil.move(file.full_path, file.full_destination)
@@ -164,6 +164,7 @@ def move_file(file):
     operation = history.generate_operation(file.full_path, file.full_destination)
     return operation
 
+#Creates all the missing folders, then moves all files into their configured folder. It then calls the save_operations function to save it to a json file.
 def organise(files, needed_folders, dir):
     logger.info("beginning organisation")
 
@@ -208,28 +209,17 @@ def main():
     #input("")
     #organise(files,needed_folders,dir)
     
-logger = logging.getLogger("FILE_ORGANISER")
-logging.basicConfig(filename="file_organiser.log", 
-                        level=logging.INFO, 
-                        format="[%(levelname)s] %(asctime)s %(message)s", 
-                        datefmt="%Y-%m-%d %H:%M:%S")
-try:
-    folders_config = load_configs()
-except Exception as e:
-    if "No configuration file exists" in str(e):
-        logger.warning("No configuration file found. Generating new configuration file")
-        generateDefaultConfig()
-        logger.info("Default configuration file generated.")
-        folders_config = load_configs()
 
-extension_lookup, ignore_lookup = generate_lookup(folders_config)
+
 
 if __name__ == "__main__":
+    #Creates logger and configures it, example of logger format: "[INFO] 2026-06-20 12:30:35"
     logger = logging.getLogger("FILE_ORGANISER")
     logging.basicConfig(filename="file_organsier.log", 
                             level=logging.INFO, 
                             format="[%(levelname)s] %(asctime)s %(message)s", 
                             datefmt="%Y-%m-%d %H:%M:%S")
+    #Attempts to load the configuration file. If it doesnt exist, a default configuration file is created.
     try:
         folders_config = load_configs()
     except Exception as e:
