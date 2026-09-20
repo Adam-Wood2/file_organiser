@@ -60,21 +60,20 @@ def draw_progress_bar(val1, val2):
         print(progress_bar)
 
 #Gets the directory from the user and extracts all files and folders from it
-def get_directories():
-    while True:
-        dir = input("Input the path for the file to sort: ")
-        if not os.path.isdir(dir):
-            print("This folder path does not exist")
-        else:
-            if not os.listdir(dir):
-                print("This folder is empty")
-            else:
-                break
+def get_directories(dir):
+    if not os.path.isdir(dir):
+        print("This folder path does not exist")
+        raise AttributeError("Non-existent file path")
+    else:
+        if not os.listdir(dir):
+            print("This folder is empty")
+            raise ValueError("Empty directory")
+
 
 
     dir_files = [f for f in os.listdir(dir) if os.path.isfile(os.path.join(dir, f))]
     dir_folders = [f for f in os.listdir(dir) if not os.path.isfile(os.path.join(dir, f))]
-    return dir, dir_files, dir_folders
+    return dir_files, dir_folders
 
 
 #parses the config file to get the types of files and their matching file extensions. Returns a dictionary with this info.
@@ -121,7 +120,7 @@ def scan_dir(dir, dir_files, dir_folders):
         file = File(file_name, dir)
         logger.info(f"File {file_name} found")
 
-        file_destination = file.get_destination()
+        file_destination = file.file_type
 
         #checks if the filetype will be sorted, whether the folder has already been identified, and whether or not it already exists
         if not file.is_ignored and file_destination not in needed_folders and file_destination not in dir_folders:
