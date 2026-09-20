@@ -114,7 +114,7 @@ def scan_dir(dir, dir_files, dir_folders):
     total_files = len(dir_files)
     current_file_num = 0
 
-    logger.info("Beginning directory scan")
+    logger.info(f"Beginning directory scan of {dir}")
     print("Scanning directory...")
     for file_name in dir_files:
         file = File(file_name, dir)

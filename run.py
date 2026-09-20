@@ -20,7 +20,7 @@ def target(location):
     dir_files, dir_folders = m.get_directories(location)
 
     files, needed_foleders = m.scan_dir(location, dir_files, dir_folders)
-    return "target", files, needed_foleders
+    return "target", location, files, needed_foleders
 
 def parse_command(command: str):
     keyword = command.split(" ")[0].lower()
@@ -37,17 +37,20 @@ def parse_command(command: str):
                 return "error", e, "Directory path must be enclosed in quotation marks (\"C:\\path\")"
 
             #Checks if any information has been given after the file path parameter
-            if len(command.split('"')) != 2:
+            if len(command.split('"')) != 3:
                 return "error", SyntaxError("Incorrect arguments"), "Target command only takes argument [path]"
 
             #Attempts to search for every file and folder in the previously given directory
             try:
                 output = target(location)
+                print(f"Pointing towards directory {location}")
             except AttributeError as e:
                 return "error", e, "The directory path given does not exist"
             except ValueError as e:
                 return "error", e, "The given directory is empty"
 
+            
+            return output
         case "dryrun":
             dryrun()
         case "organise":
@@ -69,8 +72,13 @@ def run():
     while not exit:
         command = input(">>")
         output = parse_command(command)
-        print(output)
-        input("")
+
+        match output[0]:
+            case "error":
+                print("An error has been encounterd:")
+                print(f"{type(output[1]).__name__} - {output[2]}")
+        
+
 
 
 
