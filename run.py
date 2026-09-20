@@ -20,7 +20,7 @@ def target(location):
     dir_files, dir_folders = m.get_directories(location)
 
     files, needed_foleders = m.scan_dir(location, dir_files, dir_folders)
-    return "target", location, files, needed_foleders
+    return location, files, needed_foleders
 
 def parse_command(command: str):
     keyword = command.split(" ")[0].lower()
@@ -41,18 +41,12 @@ def parse_command(command: str):
                 return "error", SyntaxError("Incorrect arguments"), "Target command only takes argument [path]"
 
             #Attempts to search for every file and folder in the previously given directory
-            try:
-                output = target(location)
-                print(f"Pointing towards directory {location}")
-            except AttributeError as e:
-                return "error", e, "The directory path given does not exist"
-            except ValueError as e:
-                return "error", e, "The given directory is empty"
+
 
             
             return output
         case "dryrun":
-            dryrun()
+            m.dry_run()
         case "organise":
             organise()
         case "help":
@@ -64,6 +58,25 @@ def parse_command(command: str):
 
     return output
 
+def execute_command(parsed_command):
+    match parsed_command[0]:
+        case "error":
+            error_type = type(parsed_command[1]).__name__
+            error_message = parsed_command[2]
+            print("An error has been encounterd:")
+            print(f"{error_type} - {error_message}")
+        case "target":
+            try:
+                location = output[1]
+                target_output = target(location)
+                print(f"Pointing towards directory {location}")
+            except AttributeError as e:
+                return "error", e, "The directory path given does not exist"
+            except ValueError as e:
+                return "error", e, "The given directory is empty"
+
+
+
 def run():
     exit = False
     print(f"File Organiser - Version {VERSION}")
@@ -71,12 +84,8 @@ def run():
     target = None
     while not exit:
         command = input(">>")
-        output = parse_command(command)
+        parsed_command = parse_command(command)
 
-        match output[0]:
-            case "error":
-                print("An error has been encounterd:")
-                print(f"{type(output[1]).__name__} - {output[2]}")
         
 
 
