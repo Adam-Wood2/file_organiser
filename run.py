@@ -28,7 +28,10 @@ def parse_command(command: str):
             print("Exiting File Organiser")
             exit()
         case "target":
-            location = get_location(command)
+            try:
+                location = get_location(command)
+            except ValueError as e:
+                return "error", e, "directory path must be enclosed in quotation marks (\"C:\\path\")"
             output = target(location)
         case "dryrun":
             dryrun()
