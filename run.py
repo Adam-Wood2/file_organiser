@@ -19,8 +19,8 @@ def target(location):
 
     dir_files, dir_folders = m.get_directories(location)
 
-    files, needed_foleders = m.scan_dir(location, dir_files, dir_folders)
-    return location, files, needed_foleders
+    files, needed_folders = m.scan_dir(location, dir_files, dir_folders)
+    return files, needed_folders
 
 def parse_command(command: str):
     keyword = command.split(" ")[0].lower()
@@ -40,11 +40,8 @@ def parse_command(command: str):
             if len(command.split('"')) != 3:
                 return "error", SyntaxError("Incorrect arguments"), "Target command only takes argument [path]"
 
-            #Attempts to search for every file and folder in the previously given directory
+            return ("target", location)
 
-
-            
-            return output
         case "dryrun":
             m.dry_run()
         case "organise":
@@ -67,14 +64,21 @@ def execute_command(parsed_command):
             print(f"{error_type} - {error_message}")
         case "target":
             try:
-                location = output[1]
+                location = parsed_command[1]
                 target_output = target(location)
                 print(f"Pointing towards directory {location}")
+                return ("executed target",) + target_output
             except AttributeError as e:
                 return "error", e, "The directory path given does not exist"
             except ValueError as e:
                 return "error", e, "The given directory is empty"
 
+            
+def execute_error(args):
+    error_type = type(args[1]).__name__
+    error_message = args[2]
+    print("An error has been encounterd:")
+    print(f"{error_type} - {error_message}")
 
 
 def run():
@@ -83,10 +87,14 @@ def run():
     m.logger.info(f"Begging File Organiser - Version {VERSION}")
     target = None
     while not exit:
-        command = input(">>")
+        command_input = input(">>")
         parsed_command = parse_command(command)
 
-        
+        keyword = parsed_command[0]
+        match keyword:
+            case "error":
+                execute_error(parsed_command)
+
 
 
 
