@@ -16,6 +16,7 @@ def get_location(command: str):
 
 
 def target(location):
+
     dir_files, dir_folders = m.get_directories(location)
 
     files, needed_foleders = m.scan_dir(location, dir_files, dir_folders)
@@ -31,8 +32,14 @@ def parse_command(command: str):
             try:
                 location = get_location(command)
             except ValueError as e:
-                return "error", e, "directory path must be enclosed in quotation marks (\"C:\\path\")"
-            output = target(location)
+                return "error", e, "Directory path must be enclosed in quotation marks (\"C:\\path\")"
+
+            try:
+                output = target(location)
+            except AttributeError as e:
+                return "error", e, "The directory path given does not exist"
+            except ValueError as e:
+                return "error", e, "The given directory is empty"
         case "dryrun":
             dryrun()
         case "organise":
