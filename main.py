@@ -82,9 +82,9 @@ def load_configs():
     logger.info("Loading configurations")
     config = ConfigParser()
 
-    if os.path.exists(os.path.join(os.getcwd(), "config.ini")):
+    if os.path.exists(os.path.join(os.getcwd(), config_file)):
         logger.info("configuration file found")
-        config.read("config.ini")
+        config.read(config_file)
     else:
         logger.info("Configuration file not found")
         raise Exception("No configuration file exists")
@@ -209,27 +209,28 @@ def main():
     #input("")
     #organise(files,needed_folders,dir)
     
-
-
-
 if __name__ == "__main__":
-    #Creates logger and configures it, example of logger format: "[INFO] 2026-06-20 12:30:35"
-    logger = logging.getLogger("FILE_ORGANISER")
-    logging.basicConfig(filename="file_organsier.log", 
-                            level=logging.INFO, 
-                            format="[%(levelname)s] %(asctime)s %(message)s", 
-                            datefmt="%Y-%m-%d %H:%M:%S")
-    #Attempts to load the configuration file. If it doesnt exist, a default configuration file is created.
-    try:
-        folders_config = load_configs()
-    except Exception as e:
-        if "No configuration file exists" in str(e):
-            logger.warning("No configuration file found. Generating new configuration file")
-            generateDefaultConfig()
-            logger.info("Default configuration file generated.")
-            folders_config = load_configs()
-
-    extension_lookup, ignore_lookup = generate_lookup(folders_config)
     main()
+
+
+#Creates logger and configures it, example of logger format: "[INFO] 2026-06-20 12:30:35"
+logger = logging.getLogger("FILE_ORGANISER")
+logging.basicConfig(filename="file_organsier.log", 
+                        level=logging.INFO, 
+                        format="[%(levelname)s] %(asctime)s %(message)s", 
+                        datefmt="%Y-%m-%d %H:%M:%S")
+#Attempts to load the configuration file. If it doesnt exist, a default configuration file is created.
+config_file = "config.ini"
+try:
+    folders_config = load_configs()
+except Exception as e:
+    if "No configuration file exists" in str(e):
+        logger.warning("No configuration file found. Generating new configuration file")
+        generateDefaultConfig()
+        logger.info("Default configuration file generated.")
+        folders_config = load_configs()
+
+extension_lookup, ignore_lookup = generate_lookup(folders_config)
+
 
 #C:\Users\Adam\OneDrive\Documents\Programs\Test Folder
